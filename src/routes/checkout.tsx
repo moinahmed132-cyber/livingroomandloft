@@ -24,7 +24,7 @@ export const Route = createFileRoute("/checkout")({
 });
 
 function CheckoutPage() {
-  const { items, subtotalPence, lines, clear } = useCart();
+  const { items, subtotalPence, lines, clear, ready } = useCart();
   const submitOrder = useServerFn(placeCodOrder);
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
@@ -67,6 +67,10 @@ function CheckoutPage() {
       );
       setSubmitting(false);
     }
+  }
+
+  if (!ready) {
+    return <div className="mx-auto max-w-3xl px-4 py-20 text-center text-muted-foreground">Loading your basket…</div>;
   }
 
   if (items.length === 0) {

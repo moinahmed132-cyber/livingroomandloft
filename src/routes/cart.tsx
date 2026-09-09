@@ -20,14 +20,16 @@ export const Route = createFileRoute("/cart")({
 });
 
 function CartPage() {
-  const { items, subtotalPence, setQty, remove } = useCart();
+  const { items, subtotalPence, setQty, remove, ready } = useCart();
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       <p className="eyebrow">Basket</p>
       <h1 className="mt-2 font-display text-4xl">Your basket</h1>
 
-      {items.length === 0 ? (
+      {!ready ? (
+        <p className="mt-10 text-muted-foreground">Loading your basket…</p>
+      ) : items.length === 0 ? (
         <div className="mt-10 border border-border bg-card p-10 text-center">
           <p className="text-muted-foreground">Your basket is empty.</p>
           <Link to="/shop" className="btn-primary mt-6">
