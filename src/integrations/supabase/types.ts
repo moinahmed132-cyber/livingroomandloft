@@ -74,6 +74,60 @@ export type Database = {
         }
         Relationships: []
       }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          details: Json
+          dimensions: string
+          id: string
+          image_url: string | null
+          lead_time: string
+          name: string
+          price_pence: number
+          slug: string
+          summary: string
+          updated_at: string
+          visible: boolean
+          was_pence: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string
+          details?: Json
+          dimensions?: string
+          id?: string
+          image_url?: string | null
+          lead_time?: string
+          name: string
+          price_pence: number
+          slug: string
+          summary?: string
+          updated_at?: string
+          visible?: boolean
+          was_pence?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          details?: Json
+          dimensions?: string
+          id?: string
+          image_url?: string | null
+          lead_time?: string
+          name?: string
+          price_pence?: number
+          slug?: string
+          summary?: string
+          updated_at?: string
+          visible?: boolean
+          was_pence?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
