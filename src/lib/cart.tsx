@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { products, type Product } from "@/data/products";
+import { type Product } from "@/data/products";
+import { useCatalog } from "@/lib/catalog";
 
 export type CartLine = { slug: string; qty: number };
 
