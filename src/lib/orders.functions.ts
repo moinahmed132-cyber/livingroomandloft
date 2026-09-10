@@ -39,11 +39,22 @@ export const placeCodOrder = createServerFn({ method: "POST" })
     const { products } = await import("@/data/products");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+    const slugs = data.lines.map((l) => l.slug);
+    const { data: liveRows } = await supabaseAdmin
+      .from("products")
+      .select("slug, name, price_pence")
+      .in("slug", slugs)
+      .eq("visible", true);
+
+    const catalog = new Map<string, { name: string; pricePence: number }>();
+    for (const p of products) catalog.set(p.slug, { name: p.name, pricePence: p.pricePence });
+    for (const r of liveRows ?? []) catalog.set(r.slug, { name: r.name, pricePence: r.price_pence });
+
     const items = data.lines.map((line) => {
-      const product = products.find((p) => p.slug === line.slug);
+      const product = catalog.get(line.slug);
       if (!product) throw new Error(`Unknown product: ${line.slug}`);
       return {
-        slug: product.slug,
+        slug: line.slug,
         name: product.name,
         qty: line.qty,
         unit_price_pence: product.pricePence,
