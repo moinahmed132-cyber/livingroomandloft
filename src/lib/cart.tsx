@@ -74,7 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       remove: (slug) => setLines((prev) => prev.filter((l) => l.slug !== slug)),
       clear: () => setLines([]),
     };
-  }, [lines, hydrated]);
+  }, [lines, hydrated, products, catalogLoading]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
