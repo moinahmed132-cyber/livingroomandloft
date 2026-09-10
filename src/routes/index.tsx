@@ -25,7 +25,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const featured = products.filter((p) => p.wasPence);
+  const { products } = useCatalog();
+  const featured = products.filter((p) => p.wasPence).slice(0, 4);
 
   return (
     <div>
