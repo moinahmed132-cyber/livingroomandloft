@@ -36,13 +36,23 @@ export const Route = createFileRoute("/product/$slug")({
 
 function ProductPage() {
   const { slug } = Route.useParams();
-  const product = getProduct(slug)!;
-  const category = getCategory(product.category)!;
+  const catalog = useCatalog();
   const { add } = useCart();
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
 
-  const related = productsInCategory(product.category).filter((p) => p.slug !== product.slug);
+  const product = catalog.getProduct(slug);
+
+  if (!product) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-24 text-center text-muted-foreground">
+        {catalog.loading ? "Loading this piece…" : "This piece is no longer available."}
+      </div>
+    );
+  }
+
+  const category = getCategory(product.category)!;
+  const related = catalog.inCategory(product.category).filter((p) => p.slug !== product.slug);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
