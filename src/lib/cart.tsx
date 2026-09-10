@@ -20,6 +20,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "lrl-cart-v1";
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { products, loading: catalogLoading } = useCatalog();
   const [lines, setLines] = useState<CartLine[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
