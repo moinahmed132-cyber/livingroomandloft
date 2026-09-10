@@ -35,15 +35,6 @@ function DeliveryPage() {
         </section>
 
         <section>
-          <h2 className="font-display text-2xl text-foreground">How long it takes</h2>
-          <p className="mt-2">
-            Mattresses and in-stock beds usually arrive within 3 to 5 working days. Wardrobes and
-            made-to-order sofas take 10 to 21 working days. The exact window is shown on each
-            product page.
-          </p>
-        </section>
-
-        <section>
           <h2 className="font-display text-2xl text-foreground">Paying cash on delivery</h2>
           <p className="mt-2">
             You never enter card details on this site. Place your order with your delivery and
