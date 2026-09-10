@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { getCategory, productsInCategory } from "@/data/products";
+import { getCategory } from "@/data/products";
+import { useCatalog } from "@/lib/catalog";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/category/$category")({
@@ -31,7 +32,7 @@ export const Route = createFileRoute("/category/$category")({
 function CategoryPage() {
   const { category } = Route.useParams();
   const info = getCategory(category)!;
-  const items = productsInCategory(category);
+  const items = useCatalog().inCategory(category);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">

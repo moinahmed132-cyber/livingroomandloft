@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Truck, BadgePoundSterling, ShieldCheck } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
-import { categories, products } from "@/data/products";
+import { categories } from "@/data/products";
+import { useCatalog } from "@/lib/catalog";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/")({
