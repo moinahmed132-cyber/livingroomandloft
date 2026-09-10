@@ -2,16 +2,18 @@ import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-ro
 import { useState } from "react";
 import { toast } from "sonner";
 import { Truck, BadgePoundSterling } from "lucide-react";
-import { getCategory, getProduct, productsInCategory } from "@/data/products";
+import { getCategory } from "@/data/products";
+import { getProductMeta } from "@/lib/catalog.functions";
+import { useCatalog } from "@/lib/catalog";
 import { gbp } from "@/lib/format";
 import { useCart } from "@/lib/cart";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/product/$slug")({
-  loader: ({ params }) => {
-    const product = getProduct(params.slug);
-    if (!product) throw notFound();
-    return { name: product.name, summary: product.summary };
+  loader: async ({ params }) => {
+    const meta = await getProductMeta({ data: { slug: params.slug } });
+    if (!meta) throw notFound();
+    return meta;
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
