@@ -52,7 +52,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       .filter((x): x is { product: Product; qty: number } => x !== null);
 
     return {
-      ready: hydrated,
+      ready: hydrated && !catalogLoading,
       lines,
       items,
       count: items.reduce((n, i) => n + i.qty, 0),
