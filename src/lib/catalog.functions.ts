@@ -69,3 +69,31 @@ export const listStoreProducts = createServerFn({ method: "GET" }).handler(async
   }
   return (data ?? []).map(mapRow);
 });
+
+export const getProductMeta = createServerFn({ method: "GET" })
+  .inputValidator((data: unknown) => {
+    const slug = (data as { slug?: unknown })?.slug;
+    if (typeof slug !== "string" || slug.length === 0 || slug.length > 160) {
+      throw new Error("Invalid product");
+    }
+    return { slug };
+  })
+  .handler(async ({ data }) => {
+    const supabase = createPublicClient();
+    const { data: row } = await supabase
+      .from("products")
+      .select("*")
+      .eq("slug", data.slug)
+      .eq("visible", true)
+      .maybeSingle();
+
+    if (row) {
+      const p = mapRow(row);
+      return { name: p.name, summary: p.summary || p.description.slice(0, 140) };
+    }
+
+    const { products } = await import("@/data/products");
+    const staticProduct = products.find((p) => p.slug === data.slug);
+    if (!staticProduct) return null;
+    return { name: staticProduct.name, summary: staticProduct.summary };
+  });
