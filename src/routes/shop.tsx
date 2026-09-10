@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { categories, products } from "@/data/products";
+import { categories } from "@/data/products";
+import { useCatalog } from "@/lib/catalog";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/shop")({
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/shop")({
 });
 
 function ShopPage() {
+  const { products } = useCatalog();
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       <p className="eyebrow">The full range</p>

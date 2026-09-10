@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { products, type Product } from "@/data/products";
+import { type Product } from "@/data/products";
+import { useCatalog } from "@/lib/catalog";
 
 export type CartLine = { slug: string; qty: number };
 
@@ -19,6 +20,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "lrl-cart-v1";
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { products, loading: catalogLoading } = useCatalog();
   const [lines, setLines] = useState<CartLine[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
@@ -50,7 +52,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       .filter((x): x is { product: Product; qty: number } => x !== null);
 
     return {
-      ready: hydrated,
+      ready: hydrated && !catalogLoading,
       lines,
       items,
       count: items.reduce((n, i) => n + i.qty, 0),
@@ -72,7 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       remove: (slug) => setLines((prev) => prev.filter((l) => l.slug !== slug)),
       clear: () => setLines([]),
     };
-  }, [lines, hydrated]);
+  }, [lines, hydrated, products, catalogLoading]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

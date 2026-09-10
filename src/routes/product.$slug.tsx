@@ -2,16 +2,18 @@ import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-ro
 import { useState } from "react";
 import { toast } from "sonner";
 import { Truck, BadgePoundSterling } from "lucide-react";
-import { getCategory, getProduct, productsInCategory } from "@/data/products";
+import { getCategory } from "@/data/products";
+import { getProductMeta } from "@/lib/catalog.functions";
+import { useCatalog } from "@/lib/catalog";
 import { gbp } from "@/lib/format";
 import { useCart } from "@/lib/cart";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/product/$slug")({
-  loader: ({ params }) => {
-    const product = getProduct(params.slug);
-    if (!product) throw notFound();
-    return { name: product.name, summary: product.summary };
+  loader: async ({ params }) => {
+    const meta = await getProductMeta({ data: { slug: params.slug } });
+    if (!meta) throw notFound();
+    return meta;
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
@@ -34,13 +36,23 @@ export const Route = createFileRoute("/product/$slug")({
 
 function ProductPage() {
   const { slug } = Route.useParams();
-  const product = getProduct(slug)!;
-  const category = getCategory(product.category)!;
+  const catalog = useCatalog();
   const { add } = useCart();
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
 
-  const related = productsInCategory(product.category).filter((p) => p.slug !== product.slug);
+  const product = catalog.getProduct(slug);
+
+  if (!product) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-24 text-center text-muted-foreground">
+        {catalog.loading ? "Loading this piece…" : "This piece is no longer available."}
+      </div>
+    );
+  }
+
+  const category = getCategory(product.category)!;
+  const related = catalog.inCategory(product.category).filter((p) => p.slug !== product.slug);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
